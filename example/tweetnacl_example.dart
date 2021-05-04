@@ -6,10 +6,10 @@ void testSignDetached(String seedStr) {
   print("seed:@${DateTime.now().millisecondsSinceEpoch}");
 
   List<int> seed = TweetNaclFast.hexDecode(seedStr);
-  KeyPair kp = Signature.keyPair_fromSeed(seed);
+  KeyPair kp = Signature.keyPair_fromSeed(seed as Uint8List);
 
   String testString = "test string";
-  Uint8List bytes = utf8.encode(testString);
+  Uint8List bytes = utf8.encode(testString) as Uint8List;
 
   Signature s1 = Signature(null, kp.secretKey);
   print("\ndetached...@${DateTime.now().millisecondsSinceEpoch}");

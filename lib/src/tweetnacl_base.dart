@@ -649,9 +649,6 @@ class Signature {
    *   returns true if verification succeeded or false if it failed.
    * */
   bool detached_verify(Uint8List message, Uint8List signature) {
-    print("detached verify");
-    print(message);
-    print(signature);
     if (signature.length != signatureLength) return false;
     if (_theirPublicKey!.length != publicKeyLength) return false;
     Uint8List sm = Uint8List(signatureLength + message.length);
@@ -660,7 +657,6 @@ class Signature {
     for (int i = 0; i < message.length; i++)
       sm[i + signatureLength] = message[i];
     var ret = TweetNaclFast.crypto_sign_open(m, -1, sm, 0, sm.length, _theirPublicKey);
-    print(ret);
     return (ret >= 0);
   }
 
@@ -831,8 +827,6 @@ class TweetNaclFast{
   static int _vn(Uint8List x, final int xoff, Uint8List y, final int yoff, int n) {
     int i,d = 0;
     for (i = 0; i < n; i++) d |= (x[i + xoff] ^ y[i + yoff]) & 0xff;
-    print("vn");
-    print(d);
     return (1 & (Int32(d - 1).shiftRightUnsigned(8).toInt())) - 1;
   }
 
@@ -3017,9 +3011,6 @@ class TweetNaclFast{
   }
 
   static int unpackneg(List<Int64List?> r, Uint8List? p) {
-    print("unpackneg");
-    print(r);
-    print(p);
     Int64List t = Int64List(16);
     Int64List chk = Int64List(16);
     Int64List num = Int64List(16);
@@ -3067,13 +3058,6 @@ class TweetNaclFast{
   ///int crypto_sign_open(Uint8Listm,long *mlen,Uint8Listsm,long n,Uint8Listpk)
   static int crypto_sign_open(Uint8List m, int dummy /* *mlen not used*/, Uint8List sm,
       final int smoff, int /*long*/ n, Uint8List? pk) {
-    print("crypto_sign_open");
-    print(m);
-    print(dummy);
-    print(sm);
-    print(smoff);
-    print(n);
-    print(pk);
     int i;
     Uint8List t = Uint8List(32), h = Uint8List(64);
     List<Int64List?> p = List.filled(4, null);
@@ -3096,10 +3080,6 @@ class TweetNaclFast{
     for (i = 0; i < n; i++) m[i] = sm[i + smoff];
 
     for (i = 0; i < 32; i++) m[i + 32] = pk![i];
-    print("hash_off");
-    print(h);
-    print(m);
-    print(n);
 
     crypto_hash_off(h, m, 0, n);
 
@@ -3111,10 +3091,6 @@ class TweetNaclFast{
     pack(t, p);
 
     n -= 64;
-    print("crypto");
-    print(sm);
-    print(smoff);
-    print(t);
     if (_crypto_verify_32(sm, smoff, t, 0) != 0) {
 // optimizing it
       ///for (i = 0; i < n; i ++) m[i] = 0;
